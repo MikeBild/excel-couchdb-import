@@ -17,7 +17,9 @@ _createDatabaseIfMissing(args)
     parse(args)
       .then(data => {
         return data.sheets.reduce((state, sheet) => {
-          return state.concat(sheet.rows.map(x => Object.assign({}, x, {doctype: sheet.name})));
+          return state.concat(sheet.rows.map(x => {
+            return Object.assign({}, x, {doctype: sheet.name})
+          }));
         }, [])
       })
       .then(data => _writeDocs(args, {docs: data}))

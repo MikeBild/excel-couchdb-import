@@ -1,9 +1,9 @@
 {
   "fileName": "parse-input.xlsx",
   "createdAt": "2014-10-15T09:27:43.000Z",
-  "updatedAt": "2014-10-15T14:11:56.000Z",
+  "updatedAt": "2016-12-19T20:31:04.000Z",
   "importedAt": "2016-12-19T14:48:32.613Z",
-  "size": 10603,
+  "size": 10663,
   "sheets": [
     {
       "name": "with_header",
@@ -18,58 +18,77 @@
       ],
       "rows": [
         {
-            "text 1": "bla, bla, bla 1",
+            "text 1": "bla bla, bla 1",
             "date 2": "5/1/14",
             "datetime 3": "01:10 01/05/2014",
             "integer 4": "-5",
             "float 5": "-5",
-            "options 6": "option 1"
+            "options 6": "option 1",
+            "array 8": [
+                "a",
+                "b",
+                "c"
+            ],
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 2",
+            "text 1": "bla bla ,bla 2",
             "date 2": "2/5/2014",
             "datetime 3": "2-5-2014 2:50",
             "integer 4": "6",
             "float 5": "6",
-            "options 6": "option 2"
+            "options 6": "option 2",
+            "array 8": "a;;",
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 3",
+            "text 1": "bla bla, bla 3",
             "date 2": "3-May-14",
             "datetime 3": "3-May-14 3:50",
             "integer 4": "A",
             "float 5": "A",
-            "options 6": "not option"
+            "options 6": "not option",
+            "array 8": [
+              "a",
+              "b"
+            ],
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 4",
+            "text 1": "bla bla, bla 4",
             "date 2": "04-05-14",
             "datetime 3": "5/4/14 4:50",
             "integer 4": "23.65",
             "float 5": "23.65",
-            "options 6": "AAA"
+            "options 6": "AAA",
+            "array 8": ";;a",
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 5",
+            "text 1": "bla, bla bla 5",
             "date 2": "5-5-2014",
             "datetime 3": "5-5-2014 5:50",
             "integer 4": "0",
             "float 5": "0",
-            "options 6": "aaa"
+            "options 6": "aaa",
+            "array 8": ";;;;",
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 6",
+            "text 1": "bla bla bla, 6",
             "date 2": "2014-May-6",
             "datetime 3": "06/05/2014 06:50",
-            "options 6": "5/3/14"
+            "options 6": "5/3/14",
+            "doctype": "with_header"
         },
         {
-            "text 1": "bla, bla, bla 7",
+            "text 1": "bla bla, bla 7",
             "date 2": "07-May-14",
             "datetime 3": "07-May-14 07:50",
             "integer 4": "B",
             "float 5": "B",
-            "options 6": "other"
+            "options 6": "other",
+            "doctype": "with_header"
         }
       ]
     },
