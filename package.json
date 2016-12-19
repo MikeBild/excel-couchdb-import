@@ -1,0 +1,38 @@
+{
+  "name": "excel-couchdb-import",
+  "version": "1.0.0",
+  "description": "Import Excel sheets to CouchDB",
+  "bin": "bin/excel-couchdb-import",
+  "scripts": {
+    "jshint": "jshint -c .jshintrc lib/ bin/ test/",
+    "test": "npm run jshint && npm run test-node",
+    "test-node": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MikeBild/excel-couchdb-import.git"
+  },
+  "keywords": [
+    "couchdb",
+    "excel",
+    "import"
+  ],
+  "author": "Mike Bild",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MikeBild/excel-couchdb-import/issues"
+  },
+  "homepage": "https://github.com/MikeBild/excel-couchdb-import",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "expect.js": "^0.3.1",
+    "jshint": "^2.5.11",
+    "mocha": "^2.1.0"
+  },
+  "dependencies": {
+    "minimist": "^1.1.0",
+    "nano": "^6.0.2",
+    "verbalize": "^0.1.2",
+    "xlsx": "^0.7.12"
+  }
+}

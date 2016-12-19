@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+const nano = require('nano');
+const url = require('url');
+const log = require('verbalize');
+const parse = require('../lib/parse');
+const argv = require('minimist')(process.argv.slice(2));
+const args = {
+  path: argv._[0],
+  targetDbUrlWithCredentials: argv.target,
+  log: log
+};
+
+log.runner = 'couchdb-excel-import';
+
+_createDatabaseIfMissing(args)
+  .then(() => {
+    parse(args)
+      .then(data => {
+        return data.sheets.reduce((state, sheet) => {
+          return state.concat(sheet.rows.map(x => Object.assign({}, x, {doctype: sheet.name})));
+        }, [])
+      })
+      .then(data => _writeDocs(args, {docs: data}))
+      .then(data => {
+        args.log.info(`${data.length} docs imported`);
+      });
+  })
+  .catch(args.log.error);
+
+function _getCouchDbApi(targetDbUrlWithCredentials) {
+  const urlParts = url.parse(targetDbUrlWithCredentials);
+  const couchDbUrl = targetDbUrlWithCredentials.replace(urlParts.pathname, '');
+  return nano(couchDbUrl).db;
+}
+
+function _getCouchDbDatabaseApi(targetDbUrlWithCredentials) {
+  return nano(targetDbUrlWithCredentials);
+}
+
+function _createDatabaseIfMissing(args) {
+  const dbName = url.parse(args.targetDbUrlWithCredentials).pathname.substr(1);
+  const database = _getCouchDbApi(args.targetDbUrlWithCredentials);
+
+  return new Promise((resolve, reject) => {
+    database.get(dbName, error => {
+      if (error) {
+        if (error.statusCode === 404) {
+          args.log.info(`creating ${dbName} database ...`);
+          database.create(dbName, error => {
+            if (error) return reject(new Error(util.format('Could not create %s database', args.targetDbUrl)));
+            resolve();
+          });
+        } else {
+          args.log.error(error);
+          reject(new Error('Could not connect to target database'));
+        }
+      }
+    });
+  });
+};
+
+function _writeDocs(state, docs) {
+  const database = _getCouchDbDatabaseApi(state.targetDbUrlWithCredentials);
+
+  return new Promise((resolve, reject) => {
+    database.bulk(docs, function(error, result) {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
