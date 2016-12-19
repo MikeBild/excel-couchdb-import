@@ -55,6 +55,7 @@ function _createDatabaseIfMissing(args) {
           reject(new Error('Could not connect to target database'));
         }
       }
+      resolve();
     });
   });
 };
