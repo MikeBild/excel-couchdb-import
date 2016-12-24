@@ -11,6 +11,10 @@ excel-couchdb-import path/to/file.xls \
   --target http://user:password@couchdbhost.com/targetdb
 ```
 
+## Example
+
+* [movies.xlsx](example/README.md)
+
 ## License
 
 MIT
