@@ -29,7 +29,7 @@
                 "b",
                 "c"
             ],
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla bla ,bla 2",
@@ -39,7 +39,7 @@
             "float 5": "6",
             "options 6": "option 2",
             "array 8": "a;;",
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla bla, bla 3",
@@ -52,7 +52,7 @@
               "a",
               "b"
             ],
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla bla, bla 4",
@@ -62,7 +62,7 @@
             "float 5": "23.65",
             "options 6": "AAA",
             "array 8": ";;a",
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla, bla bla 5",
@@ -72,14 +72,14 @@
             "float 5": "0",
             "options 6": "aaa",
             "array 8": ";;;;",
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla bla bla, 6",
             "date 2": "2014-May-6",
             "datetime 3": "06/05/2014 06:50",
             "options 6": "5/3/14",
-            "doctype": "with_header"
+            "$type": "with_header"
         },
         {
             "text 1": "bla bla, bla 7",
@@ -88,7 +88,7 @@
             "integer 4": "B",
             "float 5": "B",
             "options 6": "other",
-            "doctype": "with_header"
+            "$type": "with_header"
         }
       ]
     },
