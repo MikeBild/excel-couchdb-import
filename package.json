@@ -1,6 +1,6 @@
 {
   "name": "excel-couchdb-import",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Import Excel sheets to CouchDB",
   "bin": "bin/excel-couchdb-import",
   "scripts": {
@@ -33,6 +33,6 @@
     "minimist": "^1.1.0",
     "nano": "^6.0.2",
     "verbalize": "^0.1.2",
-    "xlsx": "^0.7.12"
+    "xlsx": "^0.9.12"
   }
 }

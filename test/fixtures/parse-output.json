@@ -1,106 +1,105 @@
 {
-  "fileName": "parse-input.xlsx",
-  "createdAt": "2014-10-15T09:27:43.000Z",
-  "updatedAt": "2016-12-19T20:31:04.000Z",
-  "importedAt": "2016-12-19T14:48:32.613Z",
-  "size": 10663,
-  "sheets": [
-    {
-      "name": "with_header",
-      "headers": [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6"
-      ],
-      "rows": [
+    "fileName": "parse-input.xlsx",
+    "createdAt": "2014-10-15T09:27:43.000Z",
+    "updatedAt": "2016-12-19T20:31:04.000Z",
+    "size": 10663,
+    "sheets": [
         {
-            "text 1": "bla bla, bla 1",
-            "date 2": "5/1/14",
-            "datetime 3": "01:10 01/05/2014",
-            "integer 4": "-5",
-            "float 5": "-5",
-            "options 6": "option 1",
-            "array 8": [
-                "a",
-                "b",
-                "c"
+            "name": "with_header",
+            "headers": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
             ],
-            "$type": "with_header"
+            "rows": [
+                {
+                    "text 1": "bla bla, bla 1",
+                    "date 2": "2014-05-01T00:00:00.000Z",
+                    "datetime 3": "2014-05-01T01:10:00.000Z",
+                    "integer 4": -5,
+                    "float 5": -5,
+                    "options 6": "option 1",
+                    "array 8": [
+                        "a",
+                        "b",
+                        "c"
+                    ],
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla bla ,bla 2",
+                    "date 2": "2014-05-02T00:00:00.000Z",
+                    "datetime 3": "2014-05-02T02:50:00.000Z",
+                    "integer 4": 6,
+                    "float 5": 6,
+                    "options 6": "option 2",
+                    "array 8": "a;;",
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla bla, bla 3",
+                    "date 2": "2014-05-03T00:00:00.000Z",
+                    "datetime 3": "2014-05-03T03:50:00.000Z",
+                    "integer 4": "A",
+                    "float 5": "A",
+                    "options 6": "not option",
+                    "array 8": [
+                        "a",
+                        "b"
+                    ],
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla bla, bla 4",
+                    "date 2": "2014-05-04T00:00:00.000Z",
+                    "datetime 3": "2014-05-04T04:50:00.000Z",
+                    "integer 4": 23.65,
+                    "float 5": 23.65,
+                    "options 6": "AAA",
+                    "array 8": ";;a",
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla, bla bla 5",
+                    "date 2": "2014-05-05T00:00:00.000Z",
+                    "datetime 3": "2014-05-05T05:50:00.000Z",
+                    "integer 4": 0,
+                    "float 5": 0,
+                    "options 6": "aaa",
+                    "array 8": ";;;;",
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla bla bla, 6",
+                    "date 2": "2014-05-06T00:00:00.000Z",
+                    "datetime 3": "2014-05-06T06:50:00.000Z",
+                    "options 6": "2014-05-03T00:00:00.000Z",
+                    "$type": "with_header"
+                },
+                {
+                    "text 1": "bla bla, bla 7",
+                    "date 2": "2014-05-07T00:00:00.000Z",
+                    "datetime 3": "2014-05-07T07:50:00.000Z",
+                    "integer 4": "B",
+                    "float 5": "B",
+                    "options 6": "other",
+                    "$type": "with_header"
+                }
+            ]
         },
         {
-            "text 1": "bla bla ,bla 2",
-            "date 2": "2/5/2014",
-            "datetime 3": "2-5-2014 2:50",
-            "integer 4": "6",
-            "float 5": "6",
-            "options 6": "option 2",
-            "array 8": "a;;",
-            "$type": "with_header"
+            "name": "without_header",
+            "headers": [],
+            "rows": []
         },
         {
-            "text 1": "bla bla, bla 3",
-            "date 2": "3-May-14",
-            "datetime 3": "3-May-14 3:50",
-            "integer 4": "A",
-            "float 5": "A",
-            "options 6": "not option",
-            "array 8": [
-              "a",
-              "b"
-            ],
-            "$type": "with_header"
-        },
-        {
-            "text 1": "bla bla, bla 4",
-            "date 2": "04-05-14",
-            "datetime 3": "5/4/14 4:50",
-            "integer 4": "23.65",
-            "float 5": "23.65",
-            "options 6": "AAA",
-            "array 8": ";;a",
-            "$type": "with_header"
-        },
-        {
-            "text 1": "bla, bla bla 5",
-            "date 2": "5-5-2014",
-            "datetime 3": "5-5-2014 5:50",
-            "integer 4": "0",
-            "float 5": "0",
-            "options 6": "aaa",
-            "array 8": ";;;;",
-            "$type": "with_header"
-        },
-        {
-            "text 1": "bla bla bla, 6",
-            "date 2": "2014-May-6",
-            "datetime 3": "06/05/2014 06:50",
-            "options 6": "5/3/14",
-            "$type": "with_header"
-        },
-        {
-            "text 1": "bla bla, bla 7",
-            "date 2": "07-May-14",
-            "datetime 3": "07-May-14 07:50",
-            "integer 4": "B",
-            "float 5": "B",
-            "options 6": "other",
-            "$type": "with_header"
+            "name": "empty",
+            "headers": [],
+            "rows": []
         }
-      ]
-    },
-    {
-        "name": "without_header",
-        "headers": [],
-        "rows": []
-    },
-    {
-        "name": "empty",
-        "headers": [],
-        "rows": []
-    }
-  ]
+    ]
 }
