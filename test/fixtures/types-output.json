@@ -1,0 +1,31 @@
+{
+    "fileName": "types-input.xlsx",
+    "createdAt": "2017-01-05T12:04:24.000Z",
+    "updatedAt": "2017-04-23T15:40:07.000Z",
+    "size": 9674,
+    "sheets": [
+        {
+            "name": "Datum",
+            "headers": [
+                "0",
+                "1"
+            ],
+            "rows": [
+                {
+                    "Datum": "1963-04-24T15:21:00.000Z",
+                    "Numbers": 47000,
+                    "Text": "Text aus\r\nmehreren Zeilen",
+                    "Bool": false,
+                    "$type": "Datum"
+                },
+                {
+                    "Datum": "1967-06-06T12:31:00.000Z",
+                    "Numbers": 24629.52152777778,
+                    "Text": "Text",
+                    "Bool": true,
+                    "$type": "Datum"
+                }
+            ]
+        }
+    ]
+}
