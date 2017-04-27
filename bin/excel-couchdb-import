@@ -7,41 +7,67 @@ const argv = require('minimist')(process.argv.slice(2));
 const args = {
   path: argv._[0],
   targetDbUrlWithCredentials: argv.target,
-  log: log
+  cleanTarget: argv.clean,
+  log: log,
 };
-
 log.runner = 'couchdb-excel-import';
 
-_createDatabaseIfMissing(args)
-  .then(() => {
-    parse(args)
-      .then(data => {
-        return data.sheets.reduce((state, sheet) => {
-          return state.concat(sheet.rows.map(x => {
-            return Object.assign({}, x, {$type: sheet.name})
-          }));
-        }, [])
-      })
-      .then(data => _writeDocs(args, {docs: data}))
-      .then(data => {
-        args.log.info(`${data.length} docs imported`);
-      });
-  })
-  .catch(args.log.error);
+if(!(args.targetDbUrlWithCredentials && url.parse(args.targetDbUrlWithCredentials))) {
+  args.log.error('Parameter "target" is missing or has the wrong URL format.');
+  process.exit(1);
+}
 
-function _getCouchDbApi(targetDbUrlWithCredentials) {
+if(!args.path) {
+  args.log.error('Path to Excel file is missing.');
+  process.exit(1);
+}
+
+
+createDatabaseIfMissing(args)
+.then(() => {
+  parse(args)
+  .then(data => {
+    return data.sheets.reduce((state, sheet) => {
+      return state.concat(sheet.rows.map(x => {
+        return Object.assign({}, x, {$type: sheet.name})
+      }));
+    }, [])
+  })
+  .then(data => writeDocs(args, {docs: data}))
+  .then(data => {
+    args.log.info(`${data.length} docs imported.`);
+    process.exit(0);
+  });
+})
+.catch(error => {
+  args.log.error(error.message);
+  process.exit(1);
+});
+
+function getCouchDbApi(targetDbUrlWithCredentials) {
   const urlParts = url.parse(targetDbUrlWithCredentials);
   const couchDbUrl = targetDbUrlWithCredentials.replace(urlParts.pathname, '');
-  return nano(couchDbUrl).db;
+  try {
+    return nano(couchDbUrl).db;
+  } catch(error) {
+    args.log.error(error.message);
+    process.exit(1);
+  }
 }
 
-function _getCouchDbDatabaseApi(targetDbUrlWithCredentials) {
-  return nano(targetDbUrlWithCredentials);
+function getCouchDbDatabaseApi(targetDbUrlWithCredentials) {
+  try {
+    return nano(targetDbUrlWithCredentials);
+  } catch(error) {
+    args.log.error(error.message);
+    process.exit(1);
+  }
 }
 
-function _createDatabaseIfMissing(args) {
+function createDatabaseIfMissing(args) {
   const dbName = url.parse(args.targetDbUrlWithCredentials).pathname.substr(1);
-  const database = _getCouchDbApi(args.targetDbUrlWithCredentials);
+  const database = getCouchDbApi(args.targetDbUrlWithCredentials);
+  if(!database) return Promise.reject(new Error(`Connection to ${args.targetDbUrlWithCredentials} failed.`));
 
   return new Promise((resolve, reject) => {
     database.get(dbName, error => {
@@ -49,24 +75,25 @@ function _createDatabaseIfMissing(args) {
         if (error.statusCode === 404) {
           args.log.info(`creating ${dbName} database ...`);
           database.create(dbName, error => {
-            if (error) return reject(new Error(util.format('Could not create %s database', args.targetDbUrl)));
+            if (error) return reject(new Error(`Could not create ${args.targetDbUrl} database.`));
             resolve();
           });
         } else {
-          args.log.error(error);
-          reject(new Error('Could not connect to target database'));
+          return reject(new Error('Could not connect to target database.'));
         }
       }
-      resolve();
+      else {
+        resolve();
+      }
     });
   });
 };
 
-function _writeDocs(state, docs) {
-  const database = _getCouchDbDatabaseApi(state.targetDbUrlWithCredentials);
+function writeDocs(state, docs) {
+  const database = getCouchDbDatabaseApi(state.targetDbUrlWithCredentials);
 
   return new Promise((resolve, reject) => {
-    database.bulk(docs, function(error, result) {
+    database.bulk(docs, (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
