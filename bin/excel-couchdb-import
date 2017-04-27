@@ -7,7 +7,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const args = {
   path: argv._[0],
   targetDbUrlWithCredentials: argv.target,
-  cleanTarget: argv.clean,
+  reimport: argv.reimport,
   log: log,
 };
 log.runner = 'couchdb-excel-import';
@@ -33,9 +33,10 @@ createDatabaseIfMissing(args)
       }));
     }, [])
   })
-  .then(data => writeDocs(args, {docs: data}))
+  .then(data => args.reimport ? rewriteDocs(args, {docs: data}) : writeDocs(args, {docs: data}))
   .then(data => {
-    args.log.info(`${data.length} docs imported.`);
+    // TODO: check conflicts and report to user
+    args.log.info(`${data.length} docs ${args.reimport ? 'reimported' : 'imported'}.`);
     process.exit(0);
   });
 })
@@ -89,8 +90,32 @@ function createDatabaseIfMissing(args) {
   });
 };
 
-function writeDocs(state, docs) {
-  const database = getCouchDbDatabaseApi(state.targetDbUrlWithCredentials);
+function rewriteDocs(args, docs) {
+  const database = getCouchDbDatabaseApi(args.targetDbUrlWithCredentials);
+  return new Promise((resolve, reject) => {
+    database.list({include_docs: false}, (error, result) => {
+      if (error) return reject(error);
+
+      const existingRevs = result.rows.map(x =>({_id: x.id, _rev: x.value.rev}));
+      const newDocs = docs.docs;
+      const merge = existingRevs.concat(newDocs).reduce((acc, x) => {
+          acc[x._id] = Object.assign(acc[x._id] || {}, x);
+          return acc;
+      }, {});
+      const merged = Object.keys(merge).map(x => merge[x]);
+
+      database.bulk({docs: merged}, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
+
+    });
+  });
+};
+
+
+function writeDocs(args, docs) {
+  const database = getCouchDbDatabaseApi(args.targetDbUrlWithCredentials);
 
   return new Promise((resolve, reject) => {
     database.bulk(docs, (error, result) => {
