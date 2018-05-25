@@ -1,56 +1,69 @@
 #!/usr/bin/env node
-const nano = require('nano');
-const url = require('url');
-const log = require('verbalize');
-const parse = require('../lib/parse');
-const argv = require('minimist')(process.argv.slice(2));
+const nano = require("nano");
+const url = require("url");
+const log = require("verbalize");
+const parse = require("../lib/parse");
+const argv = require("minimist")(process.argv.slice(2));
 const args = {
   path: argv._[0],
   targetDbUrlWithCredentials: argv.target,
   reimport: argv.reimport,
-  log: log,
+  log: log
 };
-log.runner = 'couchdb-excel-import';
+log.runner = "couchdb-excel-import";
 
-if(!(args.targetDbUrlWithCredentials && url.parse(args.targetDbUrlWithCredentials))) {
+if (
+  !(
+    args.targetDbUrlWithCredentials &&
+    url.parse(args.targetDbUrlWithCredentials)
+  )
+) {
   args.log.error('Parameter "target" is missing or has the wrong URL format.');
   process.exit(1);
 }
 
-if(!args.path) {
-  args.log.error('Path to Excel file is missing.');
+if (!args.path) {
+  args.log.error("Path to Excel file is missing.");
   process.exit(1);
 }
 
-
 createDatabaseIfMissing(args)
-.then(() => {
-  parse(args)
-  .then(data => {
-    return data.sheets.reduce((state, sheet) => {
-      return state.concat(sheet.rows.map(x => {
-        return Object.assign({}, x, {$type: sheet.name})
-      }));
-    }, [])
+  .then(() => {
+    parse(args)
+      .then(data => {
+        return data.sheets.reduce((state, sheet) => {
+          return state.concat(
+            sheet.rows.map(x => {
+              return Object.assign({}, x, { $doc_type: sheet.name });
+            })
+          );
+        }, []);
+      })
+      .then(
+        data =>
+          args.reimport
+            ? rewriteDocs(args, { docs: data })
+            : writeDocs(args, { docs: data })
+      )
+      .then(data => {
+        // TODO: check conflicts and report to user
+        args.log.info(
+          `${data.length} docs ${args.reimport ? "reimported" : "imported"}.`
+        );
+        process.exit(0);
+      });
   })
-  .then(data => args.reimport ? rewriteDocs(args, {docs: data}) : writeDocs(args, {docs: data}))
-  .then(data => {
-    // TODO: check conflicts and report to user
-    args.log.info(`${data.length} docs ${args.reimport ? 'reimported' : 'imported'}.`);
-    process.exit(0);
+  .catch(error => {
+    args.log.error(error.message);
+    process.exit(1);
   });
-})
-.catch(error => {
-  args.log.error(error.message);
-  process.exit(1);
-});
 
 function getCouchDbApi(targetDbUrlWithCredentials) {
   const urlParts = url.parse(targetDbUrlWithCredentials);
-  const couchDbUrl = targetDbUrlWithCredentials.replace(urlParts.pathname, '');
+  const couchDbUrl = targetDbUrlWithCredentials.replace(urlParts.pathname, "");
   try {
     return nano(couchDbUrl).db;
-  } catch(error) {
+  } catch (error) {
     args.log.error(error.message);
     process.exit(1);
   }
@@ -59,7 +72,7 @@ function getCouchDbApi(targetDbUrlWithCredentials) {
 function getCouchDbDatabaseApi(targetDbUrlWithCredentials) {
   try {
     return nano(targetDbUrlWithCredentials);
-  } catch(error) {
+  } catch (error) {
     args.log.error(error.message);
     process.exit(1);
   }
@@ -68,7 +81,10 @@ function getCouchDbDatabaseApi(targetDbUrlWithCredentials) {
 function createDatabaseIfMissing(args) {
   const dbName = url.parse(args.targetDbUrlWithCredentials).pathname.substr(1);
   const database = getCouchDbApi(args.targetDbUrlWithCredentials);
-  if(!database) return Promise.reject(new Error(`Connection to ${args.targetDbUrlWithCredentials} failed.`));
+  if (!database)
+    return Promise.reject(
+      new Error(`Connection to ${args.targetDbUrlWithCredentials} failed.`)
+    );
 
   return new Promise((resolve, reject) => {
     database.get(dbName, error => {
@@ -76,43 +92,46 @@ function createDatabaseIfMissing(args) {
         if (error.statusCode === 404) {
           args.log.info(`creating ${dbName} database ...`);
           database.create(dbName, error => {
-            if (error) return reject(new Error(`Could not create ${args.targetDbUrl} database.`));
+            if (error)
+              return reject(
+                new Error(`Could not create ${args.targetDbUrl} database.`)
+              );
             resolve();
           });
         } else {
-          return reject(new Error('Could not connect to target database.'));
+          return reject(new Error("Could not connect to target database."));
         }
-      }
-      else {
+      } else {
         resolve();
       }
     });
   });
-};
+}
 
 function rewriteDocs(args, docs) {
   const database = getCouchDbDatabaseApi(args.targetDbUrlWithCredentials);
   return new Promise((resolve, reject) => {
-    database.list({include_docs: false}, (error, result) => {
+    database.list({ include_docs: false }, (error, result) => {
       if (error) return reject(error);
 
-      const existingRevs = result.rows.map(x =>({_id: x.id, _rev: x.value.rev}));
+      const existingRevs = result.rows.map(x => ({
+        _id: x.id,
+        _rev: x.value.rev
+      }));
       const newDocs = docs.docs;
       const merge = existingRevs.concat(newDocs).reduce((acc, x) => {
-          acc[x._id] = Object.assign(acc[x._id] || {}, x);
-          return acc;
+        acc[x._id] = Object.assign(acc[x._id] || {}, x);
+        return acc;
       }, {});
       const merged = Object.keys(merge).map(x => merge[x]);
 
-      database.bulk({docs: merged}, (error, result) => {
+      database.bulk({ docs: merged }, (error, result) => {
         if (error) return reject(error);
         resolve(result);
       });
-
     });
   });
-};
-
+}
 
 function writeDocs(args, docs) {
   const database = getCouchDbDatabaseApi(args.targetDbUrlWithCredentials);
@@ -123,4 +142,4 @@ function writeDocs(args, docs) {
       resolve(result);
     });
   });
-};
+}

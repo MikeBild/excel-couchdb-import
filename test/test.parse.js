@@ -9,23 +9,25 @@ describe('parse', () => {
     const fixturesPath = __dirname + '/fixtures';
     const output = require(fixturesPath + '/parse-output.json');
 
-    return parse({path: fixturesPath + '/parse-input.xlsx'})
-      .then(docs => {
-        delete docs.importedAt;
-        delete output.importedAt;
-        expect(JSON.stringify(docs, null, 2)).to.equal(JSON.stringify(output, null, 2));
-      });
+    return parse({ path: fixturesPath + '/parse-input.xlsx' }).then(docs => {
+      delete docs.importedAt;
+      delete output.importedAt;
+      expect(JSON.stringify(docs, null, 2)).to.equal(
+        JSON.stringify(output, null, 2)
+      );
+    });
   });
-  
+
   it('detects and exports booleans and datetimes', () => {
     const fixturesPath = __dirname + '/fixtures';
     const output = require(fixturesPath + '/types-output.json');
 
-    return parse({path: fixturesPath + '/types-input.xlsx'})
-      .then(docs => {
-        delete docs.importedAt;
-        delete output.importedAt;
-        expect(JSON.stringify(docs, null, 2)).to.equal(JSON.stringify(output, null, 2));
-      });
+    return parse({ path: fixturesPath + '/types-input.xlsx' }).then(docs => {
+      delete docs.importedAt;
+      delete output.importedAt;
+      expect(JSON.stringify(docs, null, 2)).to.equal(
+        JSON.stringify(output, null, 2)
+      );
+    });
   });
 });
